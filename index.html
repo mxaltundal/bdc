@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddy.co - Öğrenciye Özel Kiralama ve İkinci El Pazarı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .nav-link-active {
+            border-bottom: 2px solid #84cc16; /* lime-500 */
+            color: #1f2937; /* gray-800 */
+        }
+        .main-content {
+            display: none;
+        }
+        .main-content.active {
+            display: block;
+        }
+        .btn-primary {
+            background-color: #84cc16; /* lime-500 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #65a30d; /* lime-600 */
+        }
+        .profile-tab-active {
+            border-color: #84cc16;
+            background-color: #f7fee7;
+            color: #4d7c0f;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Logo -->
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="#84cc16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 17.5C14.33 17.5 16.3 16.04 17.11 14H6.89C7.7 16.04 9.67 17.5 12 17.5ZM8.5 11C9.33 11 10 10.33 10 9.5C10 8.67 9.33 8 8.5 8C7.67 8 7 8.67 7 9.5C7 10.33 7.67 11 8.5 11Z" fill="#84cc16"/>
+                </svg>
+                <h1 class="text-2xl font-bold text-gray-800">Buddy.co</h1>
+            </div>
+            <!-- Ana Navigasyon -->
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" id="nav-oda-bul" class="nav-link text-gray-600 font-medium hover:text-gray-900 transition-colors nav-link-active">Oda Bul</a>
+                <a href="#" id="nav-esya-pazari" class="nav-link text-gray-600 font-medium hover:text-gray-900 transition-colors">Eşya Pazarı</a>
+                <a href="#" class="text-gray-600 font-medium hover:text-gray-900 transition-colors">Yardım</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button class="hidden md:block bg-white border border-lime-500 text-lime-600 px-4 py-2 rounded-lg font-semibold hover:bg-lime-50 transition">İlan Ver</button>
+                <button id="nav-profil" class="flex items-center space-x-2">
+                    <img src="https://placehold.co/32x32/E2E8F0/475569?text=P" alt="Profil Fotoğrafı" class="w-8 h-8 rounded-full">
+                    <span class="hidden lg:inline font-medium text-gray-700">Profilim</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana İçerik -->
+    <main class="container mx-auto p-4 md:p-6">
+        
+        <!-- Doğrulama Uyarısı -->
+        <div id="verification-alert" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg mb-6" role="alert">
+            <p class="font-bold">Sadece Doğrulanmış Öğrenciler!</p>
+            <p>Buddy.co, güvenli bir topluluktur. Platformdaki tüm özelliklere erişmek için üniversite e-postanla hesabını doğrulamalısın.</p>
+        </div>
+
+        <!-- ODA BUL BÖLÜMÜ -->
+        <div id="oda-bul-content" class="main-content active">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Sana Uygun Odayı Bul</h2>
+            <p class="text-gray-600 mb-6">Okuluna yakın, bütçene uygun ve güvenilir ev arkadaşları seni bekliyor.</p>
+            
+            <!-- Filtreleme Çubuğu -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-col md:flex-row gap-4 items-center">
+                <div class="w-full md:w-1/3">
+                    <label for="location" class="block text-sm font-medium text-gray-700">Konum</label>
+                    <input type="text" id="location" placeholder="Örn: Beşiktaş, Kadıköy..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                </div>
+                <div class="w-full md:w-1/4">
+                    <label for="price-range-ev" class="block text-sm font-medium text-gray-700">Fiyat Aralığı (Aylık)</label>
+                    <select id="price-range-ev" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                        <option>Tümü</option>
+                        <option>0 - 5.000 TL</option>
+                        <option>5.000 TL - 10.000 TL</option>
+                        <option>10.000 TL+</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <label for="room-type" class="block text-sm font-medium text-gray-700">Oda Tipi</label>
+                    <select id="room-type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                        <option>Tümü</option>
+                        <option>Tek Kişilik Oda</option>
+                        <option>Paylaşımlı Oda</option>
+                        <option>Stüdyo Daire</option>
+                    </select>
+                </div>
+                <button class="w-full md:w-auto btn-primary px-8 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 mt-2 md:mt-0 self-end">Ara</button>
+            </div>
+
+            <!-- İlan Kartları -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Örnek Kart 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="relative">
+                        <img src="https://placehold.co/400x300/A4C639/FFFFFF?text=Buddy" alt="Kiralık Oda" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-white p-2 rounded-full cursor-pointer">
+                            <i class="fa-regular fa-heart text-gray-600 group-hover:text-red-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-500">Beşiktaş, İstanbul</p>
+                        <h3 class="text-lg font-semibold text-gray-800 truncate mt-1">Bahçeşehir'e Yürüme Mesafesi</h3>
+                        <div class="flex items-center text-gray-600 mt-2 text-sm space-x-4">
+                           <span><i class="fa-solid fa-bed mr-1 text-lime-600"></i> 1 Oda</span>
+                           <span><i class="fa-solid fa-users mr-1 text-lime-600"></i> 2 Ev Arkadaşı</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-xl font-bold text-lime-600">9.500 TL<span class="text-sm font-normal text-gray-500">/ay</span></p>
+                            <a href="#" class="text-sm font-semibold text-gray-700 hover:text-lime-600">Detaylar <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Diğer kartlar buraya eklenebilir -->
+            </div>
+        </div>
+
+        <!-- EŞYA PAZARI BÖLÜMÜ -->
+        <div id="esya-pazari-content" class="main-content">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">İkinci El Eşya Pazarı</h2>
+            <p class="text-gray-600 mb-6">Öğrenciden öğrenciye, bütçe dostu eşyaları keşfet veya kullanmadıklarını sat.</p>
+
+            <!-- Filtreleme Çubuğu -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-col md:flex-row gap-4 items-center">
+                <div class="w-full md:w-2/5">
+                    <label for="item-search" class="block text-sm font-medium text-gray-700">Ne Arıyorsun?</label>
+                    <input type="text" id="item-search" placeholder="Örn: Çalışma masası, mini buzdolabı..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                </div>
+                <div class="w-full md:w-1/4">
+                    <label for="category" class="block text-sm font-medium text-gray-700">Kategori</label>
+                    <select id="category" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                        <option>Tümü</option>
+                        <option>Mobilya</option>
+                        <option>Elektronik</option>
+                        <option>Ders Kitabı</option>
+                        <option>Mutfak Eşyası</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <label for="price-range-esya" class="block text-sm font-medium text-gray-700">Fiyat Aralığı</label>
+                    <select id="price-range-esya" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-lime-500 focus:border-lime-500">
+                        <option>Tümü</option>
+                        <option>0 - 250 TL</option>
+                        <option>250 TL - 1.000 TL</option>
+                        <option>1.000 TL+</option>
+                    </select>
+                </div>
+                <button class="w-full md:w-auto btn-primary px-8 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 mt-2 md:mt-0 self-end">Bul</button>
+            </div>
+
+            <!-- Eşya Kartları -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Örnek Eşya Kartı 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="relative">
+                        <img src="https://placehold.co/400x300/38bdf8/FFFFFF?text=E%C5%9Fya" alt="İkinci El Eşya" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-white p-2 rounded-full cursor-pointer">
+                           <i class="fa-regular fa-heart text-gray-600 group-hover:text-red-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-500">Mobilya</p>
+                        <h3 class="text-lg font-semibold text-gray-800 truncate mt-1">IKEA Linnmon Çalışma Masası</h3>
+                        <div class="flex items-center text-gray-600 mt-2 text-sm">
+                           <i class="fa-solid fa-user-check mr-2 text-lime-600"></i>
+                           <span>Satıcı: Selin A. (İTÜ)</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-xl font-bold text-sky-600">800 TL</p>
+                            <a href="#" class="text-sm font-semibold text-gray-700 hover:text-sky-600">Mesaj Gönder <i class="fa-solid fa-comment-dots ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Örnek Eşya Kartı 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="relative">
+                        <img src="https://placehold.co/400x300/f87171/FFFFFF?text=Kitap" alt="İkinci El Eşya" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-500">Ders Kitabı</p>
+                        <h3 class="text-lg font-semibold text-gray-800 truncate mt-1">Calculus I (Temiz)</h3>
+                        <div class="flex items-center text-gray-600 mt-2 text-sm">
+                           <i class="fa-solid fa-user-check mr-2 text-lime-600"></i>
+                           <span>Satıcı: Mehmet K. (Boğaziçi)</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <p class="text-xl font-bold text-red-600">250 TL</p>
+                            <a href="#" class="text-sm font-semibold text-gray-700 hover:text-red-600">Mesaj Gönder <i class="fa-solid fa-comment-dots ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Diğer kartlar buraya eklenebilir -->
+            </div>
+        </div>
+
+        <!-- PROFİL SAYFASI BÖLÜMÜ -->
+        <div id="profil-content" class="main-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Sol Sütun: Profil Bilgileri -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <img src="https://placehold.co/128x128/A4C639/FFFFFF?text=Pelin" alt="Profil Fotoğrafı" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-lime-200">
+                        <h2 class="text-2xl font-bold text-gray-800">Pelin Kaya</h2>
+                        <p class="text-gray-600">Boğaziçi Üniversitesi - Bilgisayar Müh.</p>
+                        <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full mt-2">
+                            <i class="fa-solid fa-check-circle mr-1"></i> Doğrulanmış Öğrenci
+                        </span>
+                        <button class="mt-4 w-full bg-gray-100 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Profili Düzenle</button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md mt-6">
+                        <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Hakkımda</h3>
+                        <p class="text-gray-600 text-sm">Merhaba! Kitap okumayı, yeni yerler keşfetmeyi ve kahve içmeyi seven, uyumlu biriyim. Temiz ve düzenli bir ev ortamı benim için önemli. Yeni ev arkadaşımı arıyorum!</p>
+                    </div>
+                </div>
+
+                <!-- Sağ Sütun: İlanlar ve Değerlendirmeler -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <!-- Sekmeler -->
+                        <div>
+                            <div class="border-b border-gray-200">
+                                <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                    <button class="profile-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 profile-tab-active" data-tab="ilanlarim">İlanlarım</button>
+                                    <button class="profile-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="kaydedilenler">Kaydedilenler</button>
+                                    <button class="profile-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="degerlendirmeler">Değerlendirmeler</button>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Sekme İçerikleri -->
+                        <div class="mt-6">
+                            <!-- İlanlarım İçeriği -->
+                            <div id="tab-ilanlarim" class="profile-tab-content">
+                                <h4 class="text-md font-semibold text-gray-700 mb-4">Aktif İlanlarım (1)</h4>
+                                <div class="space-y-4">
+                                    <!-- Örnek İlan Kartı -->
+                                    <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                                        <img src="https://placehold.co/80x80/38bdf8/FFFFFF?text=Masa" alt="Eşya" class="w-20 h-20 rounded-md object-cover mr-4">
+                                        <div class="flex-grow">
+                                            <p class="font-semibold text-gray-800">IKEA Linnmon Çalışma Masası</p>
+                                            <p class="text-sm text-gray-500">Durum: Çok İyi</p>
+                                            <p class="text-lg font-bold text-sky-600">800 TL</p>
+                                        </div>
+                                        <div class="flex flex-col space-y-2">
+                                            <button class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200">Düzenle</button>
+                                            <button class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full hover:bg-red-200">Kaldır</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kaydedilenler İçeriği -->
+                            <div id="tab-kaydedilenler" class="profile-tab-content" style="display: none;">
+                               <h4 class="text-md font-semibold text-gray-700 mb-4">Kaydedilen İlanlar (1)</h4>
+                               <div class="space-y-4">
+                                    <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                                        <img src="https://placehold.co/80x80/A4C639/FFFFFF?text=Oda" alt="Oda" class="w-20 h-20 rounded-md object-cover mr-4">
+                                        <div class="flex-grow">
+                                            <p class="font-semibold text-gray-800">Kadıköy'de Sakin Oda</p>
+                                            <p class="text-sm text-gray-500">İlan Sahibi: Can Yılmaz</p>
+                                            <p class="text-lg font-bold text-lime-600">10.000 TL/ay</p>
+                                        </div>
+                                        <button class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                               </div>
+                            </div>
+                            <!-- Değerlendirmeler İçeriği -->
+                            <div id="tab-degerlendirmeler" class="profile-tab-content" style="display: none;">
+                                <h4 class="text-md font-semibold text-gray-700 mb-4">Hakkımdaki Değerlendirmeler (1)</h4>
+                                <div class="border-t pt-4">
+                                    <div class="flex items-start">
+                                        <img src="https://placehold.co/40x40/E2E8F0/475569?text=A" class="w-10 h-10 rounded-full mr-3" alt="">
+                                        <div>
+                                            <p class="font-semibold">Ahmet Ç.</p>
+                                            <div class="flex items-center text-yellow-400">
+                                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                                <span class="text-xs text-gray-500 ml-2"> (Çalışma masası alımı)</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 mt-1">"Pelin çok yardımcı ve güvenilir bir satıcı. Ürün tam anlattığı gibiydi. Teşekkürler!"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = {
+                odaBul: document.getElementById('nav-oda-bul'),
+                esyaPazari: document.getElementById('nav-esya-pazari'),
+                profil: document.getElementById('nav-profil')
+            };
+
+            const contentSections = {
+                odaBul: document.getElementById('oda-bul-content'),
+                esyaPazari: document.getElementById('esya-pazari-content'),
+                profil: document.getElementById('profil-content')
+            };
+            
+            const verificationAlert = document.getElementById('verification-alert');
+
+            function switchTab(activeTab) {
+                // Navigasyon linklerinin stillerini güncelle
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('nav-link-active'));
+                if (navLinks[activeTab] && navLinks[activeTab].classList.contains('nav-link')) {
+                    navLinks[activeTab].classList.add('nav-link-active');
+                }
+                
+                // İçerik bölümlerini göster/gizle
+                Object.values(contentSections).forEach(section => section.classList.remove('active'));
+                contentSections[activeTab].classList.add('active');
+
+                // Profil sayfasındaysak doğrulama uyarısını gizle, diğerlerinde göster
+                if (activeTab === 'profil') {
+                    verificationAlert.style.display = 'none';
+                } else {
+                    verificationAlert.style.display = 'block';
+                }
+            }
+
+            navLinks.odaBul.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('odaBul');
+            });
+
+            navLinks.esyaPazari.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('esyaPazari');
+            });
+            
+            navLinks.profil.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('profil');
+            });
+
+            // Profil Sayfası Sekmeleri
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const profileTabContents = document.querySelectorAll('.profile-tab-content');
+
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Tüm tabları pasif yap
+                    profileTabs.forEach(t => t.classList.remove('profile-tab-active'));
+                    // Tıklananı aktif yap
+                    tab.classList.add('profile-tab-active');
+
+                    // Tüm içerikleri gizle
+                    profileTabContents.forEach(content => content.style.display = 'none');
+                    // İlgili içeriği göster
+                    const tabId = tab.dataset.tab;
+                    document.getElementById('tab-' + tabId).style.display = 'block';
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>
+
